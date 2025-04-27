@@ -1,12 +1,31 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import React from "react";
+import { auth } from "../../FireBase/firebase_init";
 
 const Register = () => {
+
+// handle Submit
+const handleRegister = (e)=>{
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((result)=>{
+        console.log(result); 
+    }).catch((error)=>{
+        console.log(error);
+        
+    })
+
+}
+
   return (
     <div className="">
       <h2 className="text-2xl font-bold text-center mt-5">Registration Now</h2>
-      <form className="mt-5 space-y-4">
+      <form onSubmit={handleRegister} className="mt-5 space-y-4">
         {/* User Name */}
-        <label className="w-full input input-primary bg-white validator">
+        {/* <label className="w-full input input-primary bg-white validator">
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -32,10 +51,10 @@ const Register = () => {
             maxlength="30"
             title="Only letters, numbers or dash"
           />
-        </label>
+        </label> */}
 
         {/* Email */}
-        <label className="w-full input input-primary bg-white validator">
+        <label className="w-full input input-primary bg-white validator focus:bg-white">
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +71,7 @@ const Register = () => {
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
             </g>
           </svg>
-          <input type="email" placeholder="mail@site.com" required />
+          <input name="email" type="email" placeholder="mail@site.com" required />
         </label>
         <div className="validator-hint hidden">Enter valid email address</div>
 
@@ -76,9 +95,10 @@ const Register = () => {
           </svg>
           <input
             type="password"
+            name="password"
             required
             placeholder="Password"
-            minlength="8"
+            minLength="8"
             pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
             title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
           />
@@ -92,7 +112,7 @@ const Register = () => {
         </p>
 
         {/* Button */}
-        <button class="btn btn-secondary">Register Now!</button>
+        <button className="btn btn-secondary">Register Now!</button>
       </form>
     </div>
   );
