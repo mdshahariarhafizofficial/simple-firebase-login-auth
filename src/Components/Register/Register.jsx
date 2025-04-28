@@ -6,12 +6,36 @@ const Register = () => {
 const [success, setSuccess] = useState('');
 const [errorMessage, setErrorMessage] = useState('');
 
+
 // handle Submit
 const handleRegister = (e)=>{
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-    
+
+    // const regEx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
+    // if(regEx.test(password) === false){
+    //   setErrorMessage('The password must include at least one digit')
+    //   return
+    // }
+    const digit = /(?=.*\d)/;
+    const lowercase = /(?=.*[a-z])/;
+    const upperCase = /(?=.*[A-Z])/;
+    const passLength = /.{8,}/
+    if (digit.test(password) === false) {
+      setErrorMessage('The password must include at least one digit')
+      return
+    }else if(lowercase.test(password) === false){
+      setErrorMessage('The password must include at least one lowercase')
+      return
+    }else if(upperCase.test(password) === false){
+      setErrorMessage('The password must include at least one UpperCase')
+      return
+    }else if(passLength.test(password) === false){
+      setErrorMessage('The password must include at least 8 character')
+      return
+    }
+
     createUserWithEmailAndPassword(auth, email, password)
     .then((result)=>{
         console.log(result);
@@ -22,8 +46,8 @@ const handleRegister = (e)=>{
         setErrorMessage(error.message)
         setSuccess('')
     })
-
 }
+
 
   return (
     <div className="">
@@ -113,9 +137,8 @@ const handleRegister = (e)=>{
             name="password"
             required
             placeholder="Password"
-            minLength="8"
-            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-            title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+            // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+            // title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
           />
         </label>
 
