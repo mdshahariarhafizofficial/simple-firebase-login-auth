@@ -1,18 +1,25 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "../../FireBase/firebase_init";
+import { FaEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Register = () => {
-const [success, setSuccess] = useState('');
-const [errorMessage, setErrorMessage] = useState('');
+  const [success, setSuccess] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showPass, setShowPass] = useState(false);
 
-
-// handle Submit
-const handleRegister = (e)=>{
+  // handle Submit
+  const handleRegister = (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-
+    const terms = e.target.terms.checked;
+    console.log(email, password, terms);
+    if (!terms) {
+      setErrorMessage('Please accept terms & condition')
+      return
+    }
+    
     // const regEx = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/;
     // if(regEx.test(password) === false){
     //   setErrorMessage('The password must include at least one digit')
@@ -21,33 +28,33 @@ const handleRegister = (e)=>{
     const digit = /(?=.*\d)/;
     const lowercase = /(?=.*[a-z])/;
     const upperCase = /(?=.*[A-Z])/;
-    const passLength = /.{8,}/
+    const passLength = /.{8,}/;
     if (digit.test(password) === false) {
-      setErrorMessage('The password must include at least one digit')
-      return
-    }else if(lowercase.test(password) === false){
-      setErrorMessage('The password must include at least one lowercase')
-      return
-    }else if(upperCase.test(password) === false){
-      setErrorMessage('The password must include at least one UpperCase')
-      return
-    }else if(passLength.test(password) === false){
-      setErrorMessage('The password must include at least 8 character')
-      return
+      setErrorMessage("The password must include at least one digit");
+      return;
+    } else if (lowercase.test(password) === false) {
+      setErrorMessage("The password must include at least one lowercase");
+      return;
+    } else if (upperCase.test(password) === false) {
+      setErrorMessage("The password must include at least one UpperCase");
+      return;
+    } else if (passLength.test(password) === false) {
+      setErrorMessage("The password must include at least 8 character");
+      return;
     }
 
-    createUserWithEmailAndPassword(auth, email, password)
-    .then((result)=>{
+    createUserWithEmailAndPassword(auth, email, password, terms)
+      .then((result) => {
         console.log(result);
-        setErrorMessage('')
-        setSuccess('Register Successfully!') 
-    }).catch((error)=>{
+        setErrorMessage("");
+        setSuccess("Register Successfully!");
+      })
+      .catch((error) => {
         console.log(error);
-        setErrorMessage(error.message)
-        setSuccess('')
-    })
-}
-
+        setErrorMessage(error.message);
+        setSuccess("");
+      });
+  };
 
   return (
     <div className="">
@@ -82,16 +89,8 @@ const handleRegister = (e)=>{
           />
         </label> */}
 
-          <p className="text-red-500 text-center">
-            {
-              errorMessage
-            }
-          </p>
-          <p className="text-green-500 text-center">
-            {
-              success
-            }
-          </p>
+        <p className="text-red-500 text-center">{errorMessage}</p>
+        <p className="text-green-500 text-center">{success}</p>
 
         {/* Email */}
         <label className="w-full input input-primary bg-white validator focus:bg-white">
@@ -111,11 +110,16 @@ const handleRegister = (e)=>{
               <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
             </g>
           </svg>
-          <input name="email" type="email" placeholder="mail@site.com" required />
+          <input
+            name="email"
+            type="email"
+            placeholder="mail@site.com"
+            required
+          />
         </label>
 
         {/* Password */}
-        <label className="w-full input input-primary bg-white validator">
+        <label className="relative w-full input input-primary bg-white validator">
           <svg
             className="h-[1em] opacity-50"
             xmlns="http://www.w3.org/2000/svg"
@@ -132,21 +136,38 @@ const handleRegister = (e)=>{
               <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
             </g>
           </svg>
+
           <input
-            type="password"
+            type={showPass ? "text" : "password"}
             name="password"
             required
             placeholder="Password"
-            // pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-            // title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
           />
+          <button
+            type="button"
+            onClick={() => setShowPass(!showPass)}
+            className="cursor-pointer absolute top-2 right-2"
+          >
+            {showPass ? (
+              <FaRegEyeSlash size={22} color="blue"></FaRegEyeSlash>
+            ) : (
+              <FaEye size={22} color="blue"></FaEye>
+            )}
+          </button>
         </label>
 
+        <label className="label">
+          <input 
+          type="checkbox"
+          name="terms"
+          className="checkbox checkbox-primary" />
+          Accept terms & condition
+        </label>
+        <br/>
+
         {/* Button */}
-        <button className="btn btn-secondary">Register Now!</button>
+        <button className="btn btn-primary">Register Now!</button>
       </form>
-
-
     </div>
   );
 };
