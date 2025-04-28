@@ -1,8 +1,10 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import React from "react";
+import React, { useState } from "react";
 import { auth } from "../../FireBase/firebase_init";
 
 const Register = () => {
+const [success, setSuccess] = useState('');
+const [errorMessage, setErrorMessage] = useState('');
 
 // handle Submit
 const handleRegister = (e)=>{
@@ -12,10 +14,13 @@ const handleRegister = (e)=>{
     
     createUserWithEmailAndPassword(auth, email, password)
     .then((result)=>{
-        console.log(result); 
+        console.log(result);
+        setErrorMessage('')
+        setSuccess('Register Successfully!') 
     }).catch((error)=>{
         console.log(error);
-        
+        setErrorMessage(error.message)
+        setSuccess('')
     })
 
 }
@@ -53,6 +58,17 @@ const handleRegister = (e)=>{
           />
         </label> */}
 
+          <p className="text-red-500 text-center">
+            {
+              errorMessage
+            }
+          </p>
+          <p className="text-green-500 text-center">
+            {
+              success
+            }
+          </p>
+
         {/* Email */}
         <label className="w-full input input-primary bg-white validator focus:bg-white">
           <svg
@@ -73,7 +89,6 @@ const handleRegister = (e)=>{
           </svg>
           <input name="email" type="email" placeholder="mail@site.com" required />
         </label>
-        <div className="validator-hint hidden">Enter valid email address</div>
 
         {/* Password */}
         <label className="w-full input input-primary bg-white validator">
@@ -103,17 +118,12 @@ const handleRegister = (e)=>{
             title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
           />
         </label>
-        <p className="validator-hint hidden">
-          Must be more than 8 characters, including
-          <br />
-          At least one number <br />
-          At least one lowercase letter <br />
-          At least one uppercase letter
-        </p>
 
         {/* Button */}
         <button className="btn btn-secondary">Register Now!</button>
       </form>
+
+
     </div>
   );
 };
