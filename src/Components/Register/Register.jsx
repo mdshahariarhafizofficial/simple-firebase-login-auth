@@ -2,6 +2,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "../../FireBase/firebase_init";
 import { FaEye, FaRegEyeSlash } from "react-icons/fa";
+import { Link } from "react-router";
 
 const Register = () => {
   const [success, setSuccess] = useState("");
@@ -90,7 +91,6 @@ const Register = () => {
         </label> */}
 
         <p className="text-red-500 text-center">{errorMessage}</p>
-        <p className="text-green-500 text-center">{success}</p>
 
         {/* Email */}
         <label className="w-full input input-primary bg-white validator focus:bg-white">
@@ -168,6 +168,13 @@ const Register = () => {
         {/* Button */}
         <button className="btn btn-primary">Register Now!</button>
       </form>
+      <h2 className="text-center mt-5 text-gray-500">Already Registered. Please  
+          <Link to="/login">
+            <span className="text-blue-600 font-bold mx-1">
+            Login
+            </span> 
+          </Link>
+        Now!</h2>
     </div>
   );
 };
