@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { auth } from "../../FireBase/firebase_init";
 import { FaEye, FaRegEyeSlash } from "react-icons/fa";
 import { Link } from "react-router";
+import toast from "react-hot-toast";
 
 const Register = () => {
   const [success, setSuccess] = useState("");
@@ -51,7 +52,7 @@ const Register = () => {
         // Email Verify
         sendEmailVerification(auth.currentUser)
         .then(()=>{
-          alert('Email verification sent!')
+          toast.success('Email verification sent!')
         })
         setSuccess("Register Successfully!");
       })

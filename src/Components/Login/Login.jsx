@@ -1,11 +1,14 @@
 import { signInWithEmailAndPassword } from "firebase/auth/cordova";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Link } from "react-router";
 import { auth } from "../../FireBase/firebase_init";
+import toast from "react-hot-toast";
+import { sendPasswordResetEmail } from "firebase/auth";
 
 const Login = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const emailRef = useRef();
   const handleLogin = (e) =>{
     e.preventDefault();
 
@@ -21,13 +24,25 @@ const Login = () => {
       if (result.user.emailVerified) {
         setSuccess(true)
       }else{
-        alert('please verify your email')
+        toast.error('please verify your email')
       }
     }).catch((error)=>{
       console.log(error);
       setSuccess(false)
       setErrorMessage(error.message)
     })
+  }
+
+  const handleForgotPassword = ()=>{
+    console.log(emailRef.current.value);
+    const email = emailRef.current.value;
+    sendPasswordResetEmail(auth, email)
+    .then(()=>{
+      toast.success('Password reset email sent!')
+    }).catch((error)=>{
+      toast.error(error.message)
+    })
+
   }
 
   return (
@@ -67,6 +82,7 @@ const Login = () => {
             <input
               name="email"
               type="email"
+              ref={emailRef}
               placeholder="mail@site.com"
               required
             />
@@ -104,7 +120,7 @@ const Login = () => {
             </button>
           </label>
 
-          <p className="text-blue-600 underline font-medium">Forgot Password?</p>
+          <p onClick={handleForgotPassword} className="cursor-pointer text-blue-600 underline font-medium">Forgot Password?</p>
 
           <label className="label">
             <input
