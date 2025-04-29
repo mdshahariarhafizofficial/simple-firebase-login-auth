@@ -16,9 +16,13 @@ const Login = () => {
     
     signInWithEmailAndPassword(auth, email, password, terms)
     .then((result)=>{
-      console.log(result);
-      setSuccess(true)
+      console.log(result.user.emailVerified);
       setErrorMessage('')
+      if (result.user.emailVerified) {
+        setSuccess(true)
+      }else{
+        alert('please verify your email')
+      }
     }).catch((error)=>{
       console.log(error);
       setSuccess(false)
@@ -100,6 +104,8 @@ const Login = () => {
             </button>
           </label>
 
+          <p className="text-blue-600 underline font-medium">Forgot Password?</p>
+
           <label className="label">
             <input
               type="checkbox"
@@ -114,9 +120,9 @@ const Login = () => {
           <button className="btn btn-primary">Login Now</button>
         </form>
 
-        <h2 className="text-center mt-5 text-gray-500">Don't have account 
+        <h2 className="text-center mt-5 text-gray-500">Not Register, Please
           <Link to="/register">
-            <span className="text-blue-600 font-bold mx-1">
+            <span className="text-blue-600 font-bold mx-1 underline">
             Register
             </span> 
           </Link>

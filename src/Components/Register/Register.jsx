@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import React, { useState } from "react";
 import { auth } from "../../FireBase/firebase_init";
 import { FaEye, FaRegEyeSlash } from "react-icons/fa";
@@ -48,6 +48,11 @@ const Register = () => {
       .then((result) => {
         console.log(result);
         setErrorMessage("");
+        // Email Verify
+        sendEmailVerification(auth.currentUser)
+        .then(()=>{
+          alert('Email verification sent!')
+        })
         setSuccess("Register Successfully!");
       })
       .catch((error) => {
@@ -91,6 +96,7 @@ const Register = () => {
         </label> */}
 
         <p className="text-red-500 text-center">{errorMessage}</p>
+        <p className="text-green-500 text-center">{success}</p>
 
         {/* Email */}
         <label className="w-full input input-primary bg-white validator focus:bg-white">
@@ -170,7 +176,7 @@ const Register = () => {
       </form>
       <h2 className="text-center mt-5 text-gray-500">Already Registered. Please  
           <Link to="/login">
-            <span className="text-blue-600 font-bold mx-1">
+            <span className="text-blue-600 font-bold mx-1 underline">
             Login
             </span> 
           </Link>
